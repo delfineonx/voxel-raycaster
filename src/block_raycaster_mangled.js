@@ -1,0 +1,812 @@
+// Copyright (c) 2025 delfineonx
+// This product includes "Block Raycaster" created by delfineonx.
+// Licensed under the Apache License, Version 2.0 (the "License").
+
+globalThis.BR={
+  F:1e48,
+
+  default:{
+    directionType:null,
+    maxDistance:null,
+    startOffset:null,
+    cellSize:null
+  },
+
+  C:[
+    null,
+    null,
+    1,
+    6,
+    0,
+    1,
+    null,
+    null,
+    null
+  ],
+
+  H:{
+    V:{
+      A:.6366197723675814,
+      B:1.5707963267948966,
+      C:6.123233995736766e-17,
+
+      D:.017453292519943295,
+      E:57.29577951308232,
+
+      F:-1.6059043836821613e-10,
+      G:2.5052108385441720e-08,
+      H:-2.7557319223985893e-06,
+      I:1.9841269841269840e-04,
+      J:-8.3333333333333333e-03,
+      K:1.6666666666666667e-01,
+
+      L:2.0876756987868100e-09,
+      M:-2.7557319223985890e-07,
+      N:2.4801587301587300e-05,
+      O:-1.3888888888888890e-03,
+      P:4.1666666666666664e-02,
+      Q:-5.0000000000000000e-01,
+
+      R:-.14285714285714285,
+      S:.2,
+      T:-.3333333333333333,
+
+      d:null,
+
+      get 2(){
+        let S=this,
+          p=S.d[0],
+          b=S.d[1],
+          s,
+          d,
+          e,
+          r,
+          q,
+          h,
+          i,
+          j,
+          k,
+          l,
+          m,
+          n,
+          o;
+        {
+          s=p*S.A;
+          d=s+.5-(s<0)|0;
+          e=p-d*S.B-d*S.C;
+          r=e*e;
+          q=S.F;
+          q=q*r+S.G;
+          q=q*r+S.H;
+          q=q*r+S.I;
+          q=q*r+S.J;
+          q=q*r+S.K;
+          h=e+e*r*-q;
+          q=S.L;
+          q=q*r+S.M;
+          q=q*r+S.N;
+          q=q*r+S.O;
+          q=q*r+S.P;
+          q=q*r+S.Q;
+          i=1+q*r;
+          j=d&3&1;
+          k=1-(d&3>>1<<1);
+          l=(h*(1-j)+i*j)*k;
+          m=(i*(1-j)+-h*j)*k
+        }
+        {
+          s=b*S.A;
+          d=s+.5-(s<0)|0;
+          e=b-d*S.B-d*S.C;
+          r=e*e;
+          q=S.F;
+          q=q*r+S.G;
+          q=q*r+S.H;
+          q=q*r+S.I;
+          q=q*r+S.J;
+          q=q*r+S.K;
+          h=e+e*r*-q;
+          q=S.L;
+          q=q*r+S.M;
+          q=q*r+S.N;
+          q=q*r+S.O;
+          q=q*r+S.P;
+          q=q*r+S.Q;
+          i=1+q*r;
+          j=d&3&1;
+          k=1-(d&3>>1<<1);
+          n=(h*(1-j)+i*j)*k;
+          o=(i*(1-j)+-h*j)*k
+        }
+        let C=BR.C;
+        C[6]=-o*l;
+        C[7]=n;
+        C[8]=-o*m;
+        S.d=null
+      },
+
+      get 3(){
+        let S=this,
+          p=S.d[0]*S.D,
+          b=S.d[1]*S.D,
+          s,
+          d,
+          e,
+          r,
+          q,
+          h,
+          i,
+          j,
+          k,
+          l,
+          m,
+          n,
+          o;
+        {
+          s=p*S.A;
+          d=s+.5-(s<0)|0;
+          e=p-d*S.B-d*S.C;
+          r=e*e;
+          q=S.F;
+          q=q*r+S.G;
+          q=q*r+S.H;
+          q=q*r+S.I;
+          q=q*r+S.J;
+          q=q*r+S.K;
+          h=e+e*r*-q;
+          q=S.L;
+          q=q*r+S.M;
+          q=q*r+S.N;
+          q=q*r+S.O;
+          q=q*r+S.P;
+          q=q*r+S.Q;
+          i=1+q*r;
+          j=d&3&1;
+          k=1-(d&3>>1<<1);
+          l=(h*(1-j)+i*j)*k;
+          m=(i*(1-j)+-h*j)*k
+        }
+        {
+          s=b*S.A;
+          d=s+.5-(s<0)|0;
+          e=b-d*S.B-d*S.C;
+          r=e*e;
+          q=S.F;
+          q=q*r+S.G;
+          q=q*r+S.H;
+          q=q*r+S.I;
+          q=q*r+S.J;
+          q=q*r+S.K;
+          h=e+e*r*-q;
+          q=S.L;
+          q=q*r+S.M;
+          q=q*r+S.N;
+          q=q*r+S.O;
+          q=q*r+S.P;
+          q=q*r+S.Q;
+          i=1+q*r;
+          j=d&3&1;
+          k=1-(d&3>>1<<1);
+          n=(h*(1-j)+i*j)*k;
+          o=(i*(1-j)+-h*j)*k
+        }
+        let C=BR.C;
+        C[6]=-o*l;
+        C[7]=n;
+        C[8]=-o*m;
+        S.d=null
+      },
+
+      get 4(){
+        let S=this,
+          a=S.d[0],
+          b=S.d[1],
+          D=S.d[2],
+          d=S.B+S.C,
+          e=d+d,
+          E,
+          g,
+          h,
+          i,
+          j,
+          k,
+          l,
+          m,
+          n,
+          o,
+          p,
+          q;
+        {
+          E=-D;
+          g=-a;
+          h=E*((E>0)-(E<0));
+          i=g*((g>0)-(g<0));
+          j=+(i>h);
+          k=h+(i-h)*j;
+          l=i+(h-i)*j;
+          m=l/(k+(k===0));
+          n=m*m;
+          o=S.R;
+          o=o*n+S.S;
+          o=o*n+S.T;
+          o=(o*n+1)*m;
+          p=o*(1-j)+(d-o)*j;
+          p=p+(e-2*p)*(E<0);
+          p=p*(1-((g<0)<<1))
+        }
+        {
+          let r=a*a+D*D,
+            s=+(r===0),
+            t=+(r>=2),
+            u=+(r<.5),
+            v=(1-t+.5*t)*(1-u+2*u),
+            w=r*v*v+s,
+            x=w-1,
+            y=1-.5*x+.375*x*x;
+          y=y*(1.5-.5*w*y*y);
+          y=y*(1.5-.5*w*y*y);
+          E=r*(v*y)*(1-s);
+          g=b;
+          h=E*((E>0)-(E<0));
+          i=g*((g>0)-(g<0));
+          j=+(i>h);
+          k=h+(i-h)*j;
+          l=i+(h-i)*j;
+          m=l/(k+(k===0));
+          n=m*m;
+          o=S.R;
+          o=o*n+S.S;
+          o=o*n+S.T;
+          o=(o*n+1)*m;
+          q=o*(1-j)+(d-o)*j;
+          q=q+(e-2*q)*+(E<0);
+          q=q*(1-((g<0)<<1));
+          let z=(q>0)-(q<0),
+            A=d-.001,
+            B=+(q*z>A);
+          q=q*(1-B)+A*B*z
+        }
+        let C=BR.C;
+        C[6]=p;
+        C[7]=q;
+        S.d=null
+      },
+
+      get 5(){
+        let S=this,
+          a=S.d[0],
+          b=S.d[1],
+          D=S.d[2],
+          d=S.B+S.C,
+          e=d+d,
+          E,
+          g,
+          h,
+          i,
+          j,
+          k,
+          l,
+          m,
+          n,
+          o,
+          p,
+          q;
+        {
+          E=-D;
+          g=-a;
+          h=E*((E>0)-(E<0));
+          i=g*((g>0)-(g<0));
+          j=+(i>h);
+          k=h+(i-h)*j;
+          l=i+(h-i)*j;
+          m=l/(k+(k===0));
+          n=m*m;
+          o=S.R;
+          o=o*n+S.S;
+          o=o*n+S.T;
+          o=(o*n+1)*m;
+          p=o*(1-j)+(d-o)*j;
+          p=p+(e-2*p)*(E<0);
+          p=p*(1-((g<0)<<1))
+        }
+        {
+          let r=a*a+D*D,
+            s=+(r===0),
+            t=+(r>=2),
+            u=+(r<.5),
+            v=(1-t+.5*t)*(1-u+2*u),
+            w=r*v*v+s,
+            x=w-1,
+            y=1-.5*x+.375*x*x;
+          y=y*(1.5-.5*w*y*y);
+          y=y*(1.5-.5*w*y*y);
+          E=r*(v*y)*(1-s);
+          g=b;
+          h=E*((E>0)-(E<0));
+          i=g*((g>0)-(g<0));
+          j=+(i>h);
+          k=h+(i-h)*j;
+          l=i+(h-i)*j;
+          m=l/(k+(k===0));
+          n=m*m;
+          o=S.R;
+          o=o*n+S.S;
+          o=o*n+S.T;
+          o=(o*n+1)*m;
+          q=o*(1-j)+(d-o)*j;
+          q=q+(e-2*q)*+(E<0);
+          q=q*(1-((g<0)<<1));
+          let z=(q>0)-(q<0),
+            A=d-.001,
+            B=+(q*z>A);
+          q=q*(1-B)+A*B*z
+        }
+        let C=BR.C;
+        C[6]=p*S.E;
+        C[7]=q*S.E;
+        S.d=null
+      },
+
+      get 6(){
+        let S=this,
+          C=BR.C;
+        C[6]=S.d[0]*S.E;
+        C[7]=S.d[1]*S.E;
+        S.d=null
+      },
+
+      get 7(){
+        let S=this,
+          C=BR.C;
+        C[6]=S.d[0]*S.D;
+        C[7]=S.d[1]*S.D;
+        S.d=null
+      },
+
+      get 8(){
+        let C=BR.C,
+          a=C[6]*C[6]+C[7]*C[7]+C[8]*C[8],
+          b=+(a===0),
+          c=+(a>=2),
+          e=+(a<.5),
+          f=(1-c+.5*c)*(1-e+2*e),
+          g=a*f*f+b,
+          h=g-1,
+          i=1-.5*h+.375*h*h;
+        i=i*(1.5-.5*g*i*i);
+        i=i*(1.5-.5*g*i*i);
+        let j=f*i*(1-b);
+        C[6]*=j;
+        C[7]*=j;
+        C[8]*=j
+      }
+    },
+
+    I:{
+      c:0,
+      e:0,
+      r:null,
+
+      i:{
+        x:null,
+        y:null,
+        z:null,
+        c:null,
+        m:null,
+        q:null,
+        v:null,
+        o:null,
+        X:null,
+        Y:null,
+        Z:null
+      },
+
+      l:{
+        x:null,
+        y:null,
+        z:null,
+        X:null,
+        Y:null,
+        Z:null,
+        e:null,
+        f:null,
+        g:null,
+        E:null,
+        F:null,
+        G:null,
+        k:null,
+        u:null,
+        w:null,
+        K:null,
+        U:null,
+        W:null,
+        q:null,
+        v:null,
+        o:null,
+        t:null,
+        s:null
+      },
+
+      get 0(){
+        let C=BR.C,
+          a=this.i,
+          _=this.l,
+          c=_.x=a.x,
+          e=_.y=a.y,
+          f=_.z=a.z,
+          g=a.c,
+          h=_.X=a.X,
+          i=_.Y=a.Y,
+          j=_.Z=a.Z,
+          k=_.E=(c>0)-(c<0),
+          l=_.F=(e>0)-(e<0),
+          m=_.G=(f>0)-(f<0),
+          n=c*k,
+          o=e*l,
+          p=f*m,
+          q=+(n===0),
+          r=+(o===0),
+          s=+(p===0);
+        _.k=g/(n+q);
+        _.u=g/(o+r);
+        _.w=g/(p+s);
+        let t=h/g;
+        _.e=(t|0)-((t|0)>t);
+        let $=i/g;
+        _.f=($|0)-(($|0)>$);
+        let v=j/g;
+        _.g=(v|0)-((v|0)>v);
+        let w=((_.e+(k+1>>>1))*g-h)*k/(n+q)+q*BR.F,
+          x=((_.f+(l+1>>>1))*g-i)*l/(o+r)+r*BR.F,
+          y=((_.g+(m+1>>>1))*g-j)*m/(p+s)+s*BR.F;
+        C[1]=n;
+        C[0]=o;
+        C[1]=C[+(n>o)];
+        C[0]=p;
+        let z=C[+(C[1]>p)],
+          A=g/(z+(z===0))*1e-9;
+        _.K=w+=(w===0)*A;
+        _.U=x+=(x===0)*A;
+        _.W=y+=(y===0)*A;
+        _.q=a.q;
+        _.v=a.v;
+        _.o=a.o;
+        _.t=a.m*_.v+A;
+        _.s=0;
+        this.c=1;
+        this[this.c]
+      },
+
+      get 1(){
+        let o=this.l,
+          b=o.E,
+          c=o.F,
+          d=o.G,
+          e=o.k,
+          f=o.u,
+          g=o.w,
+          h=o.t,
+          i=o.e,
+          j=o.f,
+          _=o.g,
+          l=o.K,
+          m=o.U,
+          n=o.W,
+          $,
+          p,
+          q,
+          r,
+          s,
+          t;
+        o.s-=this.e;
+        this.e=0;
+        while(true){
+          o.s++;
+          o.e=i;
+          o.f=j;
+          o.g=_;
+          o.K=l;
+          o.U=m;
+          o.W=n;
+          $=l<m&l<n;
+          p=m<=n&1-$;
+          q=1-$-p;
+          r=l*$+m*p+n*q;
+          i+=b*$;
+          j+=c*p;
+          _+=d*q;
+          l+=e*$;
+          m+=f*p;
+          n+=g*q;
+          s=api.getBlockId(i,j,_);
+          t=r<=h;
+          if(!s&t){continue}
+          break
+        }
+        let u=-b*$,
+          v=-c*p,
+          w=-d*q,
+          x=r*(1-(o.q===0)),
+          y=x*o.q*o.v;
+        this.r={
+          blockId:s,
+          position:[i,j,_],
+          normal:[u,v,w],
+          adjacent:[i+u,j+v,_+w],
+          point:[o.X+o.x*x,o.Y+o.y*x,o.Z+o.z*x],
+          distance:y+o.o,
+          offsetDistance:y,
+          steps:o.s,
+          isInRange:t
+        };
+        this.c=0
+      }
+    }
+  },
+
+  iget(p,_,$,m,o,c,i){
+    let C=BR.C,
+      V=BR.H.V,
+      I=BR.H.I,
+      a=I.i;
+    C[6]=_[0];
+    C[7]=_[1];
+    C[8]=_[2];
+    V.d=_;
+    C[0]=$|0;
+    V[C[(($|0)<1|($|0)>3)<<1]];
+    let b=a.x=C[6],
+      e=a.y=C[7],
+      f=a.z=C[8];
+    C[0]=c|0;
+    a.c=C[((c|0)<=0)*5];
+    C[0]=m;
+    a.m=C[(m<=0)*3];
+    let g=a.q=b*b+e*e+f*f,
+      h=+(g===0),
+      j=+(g>=2),
+      k=+(g<.5),
+      l=(1-j+.5*j)*(1-k+2*k),
+      n=g*l*l+h,
+      q=n-1,
+      r=1-.5*q+.375*q*q;
+    r=r*(1.5-.5*n*r*r);
+    r=r*(1.5-.5*n*r*r);
+    a.v=l*r*(1-h);
+    C[0]=o;
+    a.o=C[(o===void 0|o===null)<<2];
+    let s=a.o*a.v;
+    a.X=p[0]+b*s;
+    a.Y=p[1]+e*s;
+    a.Z=p[2]+f*s;
+    I.e=I.c*=+(i!==!1);
+    I[I.c];
+    let u=I.r;
+    I.r=null;
+    return u
+  },
+
+  get(p,_,$,m,o,c){
+    let C=BR.C,
+      V=BR.H.V;
+    C[6]=_[0];
+    C[7]=_[1];
+    C[8]=_[2];
+    V.d=_;
+    C[0]=$|0;
+    V[C[(($|0)<1|($|0)>3)<<1]];
+    let a=C[6],
+      b=C[7],
+      e=C[8];
+    C[0]=c|0;
+    let f=C[((c|0)<=0)*5];
+    C[0]=m;
+    let a_=C[(m<=0)*3],
+      h=a*a+b*b+e*e,
+      U=+(h===0),
+      c_=+(h>=2),
+      d_=+(h<.5),
+      l=(1-c_+.5*c_)*(1-d_+2*d_),
+      n=h*l*l+U,
+      q=n-1,
+      r=1-.5*q+.375*q*q;
+    r=r*(1.5-.5*n*r*r);
+    r=r*(1.5-.5*n*r*r);
+    let e_=l*r*(1-U);
+    C[0]=o;
+    let u=C[(o===void 0|o===null)<<2],
+      v=u*e_,
+      w=p[0]+a*v,
+      x=p[1]+b*v,
+      y=p[2]+e*v,
+      z=(a>0)-(a<0),
+      A=(b>0)-(b<0),
+      B=(e>0)-(e<0),
+      D=a*z,
+      E=b*A,
+      F=e*B,
+      d=+(D===0),
+      g_=+(E===0),
+      h_=+(F===0),
+      J=f/(D+d),
+      K=f/(E+g_),
+      L=f/(F+h_),
+      M=w/f,
+      N=(M|0)-((M|0)>M),
+      O=x/f,
+      P=(O|0)-((O|0)>O),
+      Q=y/f,
+      R=(Q|0)-((Q|0)>Q),
+      S=((N+(z+1>>>1))*f-w)*z/(D+d)+d*BR.F,
+      T=((P+(A+1>>>1))*f-x)*A/(E+g_)+g_*BR.F,
+      t=((R+(B+1>>>1))*f-y)*B/(F+h_)+h_*BR.F;
+    C[1]=D;
+    C[0]=E;
+    C[1]=C[+(D>E)];
+    C[0]=F;
+    let W=C[+(C[1]>F)],
+      X=f/(W+(W===0))*1e-9;
+    S+=(S===0)*X;
+    T+=(T===0)*X;
+    t+=(t===0)*X;
+    let Y=a_*e_+X,
+      Z,
+      g,
+      i,
+      j,
+      k,
+      s,
+      I=0;
+    while(true){
+      I++;
+      Z=S<T&S<t;
+      g=T<=t&1-Z;
+      i=1-Z-g;
+      j=S*Z+T*g+t*i;
+      N+=z*Z;
+      P+=A*g;
+      R+=B*i;
+      S+=J*Z;
+      T+=K*g;
+      t+=L*i;
+      k=api.getBlockId(N,P,R);
+      s=j<=Y;
+      if(!k&s){continue}
+      break
+    }
+    let i_=-z*Z,
+      j_=-A*g,
+      k_=-B*i,
+      G=j*(1-U),
+      H=G*h*e_;
+    return {
+      blockId:k,
+      position:[N,P,R],
+      normal:[i_,j_,k_],
+      adjacent:[N+i_,P+j_,R+k_],
+      point:[w+a*G,x+b*G,y+e*G],
+      distance:H+u,
+      offsetDistance:H,
+      steps:I,
+      isInRange:s
+    };
+  },
+
+  startOffsetPosition(p,_,$,o){
+    let C=BR.C,
+      V=BR.H.V;
+    C[6]=_[0];
+    C[7]=_[1];
+    C[8]=_[2];
+    V.d=_;
+    C[0]=$|0;
+    V[C[(($|0)<1|($|0)>3)<<1]];
+    let a=C[6],
+      b=C[7],
+      c=C[8],
+      e=a*a+b*b+c*c,
+      d=+(e===0),
+      g=+(e>=2),
+      h=+(e<.5),
+      i=(1-g+.5*g)*(1-h+2*h),
+      j=e*i*i+d,
+      k=j-1,
+      l=1-.5*k+.375*k*k;
+    l=l*(1.5-.5*j*l*l);
+    l=l*(1.5-.5*j*l*l);
+    let m=i*l*(1-d);
+    C[0]=o;
+    let n=C[(o===void 0|o===null)<<2],
+      q=n*m;
+    return[
+      p[0]+a*q,
+      p[1]+b*q,
+      p[2]+c*q
+    ]
+  },
+
+  maxDistancePosition(p,_,$,m,o){
+    let C=BR.C,
+      V=BR.H.V;
+    C[6]=_[0];
+    C[7]=_[1];
+    C[8]=_[2];
+    V.d=_;
+    C[0]=$|0;
+    V[C[(($|0)<1|($|0)>3)<<1]];
+    let a=C[6],
+      d=C[7],
+      c=C[8];
+    C[0]=m;
+    let e=C[(m<=0)*3],
+      f=a*a+d*d+c*c,
+      g=+(f===0),
+      h=+(f>=2),
+      i=+(f<.5),
+      j=(1-h+.5*h)*(1-i+2*i),
+      k=f*j*j+g,
+      l=k-1,
+      n=1-.5*l+.375*l*l;
+    n=n*(1.5-.5*k*n*n);
+    n=n*(1.5-.5*k*n*n);
+    let q=j*n*(1-g);
+    C[0]=o;
+    let r=C[(o===void 0|o===null)<<2],
+      t=(r+e)*q;
+    return[
+      p[0]+a*t,
+      p[1]+d*t,
+      p[2]+c*t
+    ]
+  },
+
+  convertDirection(_,f,t){
+    let C=BR.C,
+      V=BR.H.V;
+    C[6]=_[0];
+    C[7]=_[1];
+    C[8]=_[2];
+    V.d=_;
+    let a=C[0]=f|0;
+    a=C[(a<1|a>3)<<1];
+    let b=C[0]=t|0;
+    b=C[(b<1|b>3)<<1];
+    V[(a!==b)*(a+(a===1)*(b+1)+4*((a^b)===1))];
+    V[(a===1&b===1)<<3];
+    C[0]=[C[6],C[7]];
+    C[1]=[C[6],C[7],C[8]];
+    let c=C[+(b===1)];
+    C[0]=C[1]=null;
+    return c
+  }
+};
+
+{
+  const d=BR.default;
+  const C=BR.C;
+  Object.defineProperty(d,"directionType",{
+    configurable:true,
+    get:()=>{return C[2]},
+    set:v=>{C[2]=v}
+  });
+  Object.defineProperty(d,"maxDistance",{
+    configurable:true,
+    get:()=>{return C[3]},
+    set:v=>{C[3]=v}
+  });
+  Object.defineProperty(d,"startOffset",{
+    configurable:true,
+    get:()=>{return C[4]},
+    set:v=>{C[4]=v}
+  });
+  Object.defineProperty(d,"cellSize",{
+    configurable:true,
+    get:()=>{return C[5]},
+    set:v=>{C[5]=v}
+  })
+}
+
+Object.seal(BR);
+globalThis.BlockRaycaster=BR;
+void 0;
+
