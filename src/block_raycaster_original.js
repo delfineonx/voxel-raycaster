@@ -599,7 +599,7 @@ globalThis.BR = {
             pickZ,
             timeHit,
             blockId,
-            isInRange;
+            inRange;
 
         layout.stepCount -= this.entryState;
         this.entryState = 0;
@@ -627,8 +627,8 @@ globalThis.BR = {
           timeNextZ += timeStrideZ * pickZ;
 
           blockId = api.getBlockId(voxelX, voxelY, voxelZ);
-          isInRange = (timeHit <= maxTime);
-          if (!blockId & isInRange) { continue; }
+          inRange = (timeHit <= maxTime);
+          if (!blockId & inRange) { continue; }
           break;
         }
 
@@ -648,7 +648,7 @@ globalThis.BR = {
           distance: offsetDistance + layout.startOffsetDistance,
           offsetDistance,
           steps: layout.stepCount,
-          isInRange,
+          inRange,
         };
 
         this.currentState = 0;
@@ -792,7 +792,7 @@ globalThis.BR = {
         pickZ,
         timeHit,
         blockId,
-        isInRange;
+        inRange;
 
     let stepCount = 0;
     while (true) {
@@ -812,8 +812,8 @@ globalThis.BR = {
       timeNextZ += timeStrideZ * pickZ;
 
       blockId = api.getBlockId(voxelX, voxelY, voxelZ);
-      isInRange = (timeHit <= maxTime);
-      if (!blockId & isInRange) { continue; }
+      inRange = (timeHit <= maxTime);
+      if (!blockId & inRange) { continue; }
       break;
     }
 
@@ -833,7 +833,7 @@ globalThis.BR = {
       distance: offsetDistance + startOffsetDistance,
       offsetDistance,
       steps: stepCount,
-      isInRange,
+      inRange,
     };
   },
 

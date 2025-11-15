@@ -500,7 +500,7 @@ globalThis.BR={
           t;
         o.s-=this.e;
         this.e=0;
-        while(true){
+        while(!0){
           o.s++;
           o.e=i;
           o.f=j;
@@ -537,7 +537,7 @@ globalThis.BR={
           distance:y+o.o,
           offsetDistance:y,
           steps:o.s,
-          isInRange:t
+          inRange:t
         };
         this.c=0
       }
@@ -657,7 +657,7 @@ globalThis.BR={
       k,
       s,
       I=0;
-    while(true){
+    while(!0){
       I++;
       Z=S<T&S<t;
       g=T<=t&1-Z;
@@ -688,7 +688,7 @@ globalThis.BR={
       distance:H+u,
       offsetDistance:H,
       steps:I,
-      isInRange:s
+      inRange:s
     };
   },
 
@@ -785,22 +785,22 @@ globalThis.BR={
   const d=BR.default;
   const C=BR.C;
   Object.defineProperty(d,"directionType",{
-    configurable:true,
+    configurable:!0,
     get:()=>{return C[2]},
     set:v=>{C[2]=v}
   });
   Object.defineProperty(d,"maxDistance",{
-    configurable:true,
+    configurable:!0,
     get:()=>{return C[3]},
     set:v=>{C[3]=v}
   });
   Object.defineProperty(d,"startOffset",{
-    configurable:true,
+    configurable:!0,
     get:()=>{return C[4]},
     set:v=>{C[4]=v}
   });
   Object.defineProperty(d,"cellSize",{
-    configurable:true,
+    configurable:!0,
     get:()=>{return C[5]},
     set:v=>{C[5]=v}
   })
