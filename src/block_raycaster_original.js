@@ -3,6 +3,14 @@
 // Licensed under the Apache License, Version 2.0.
 
 {
+  const _BR = {
+    default: null,
+    cast: null,
+    convertDirection: null,
+    offsetPosition: null,
+    maxDistancePosition: null,
+  };
+
   // shared direction registers
   // 1: [dirX, dirY, dirZ]
   // 2: [yawRad, pitchRad, undefined]
@@ -18,7 +26,7 @@
   const DEG_TO_RAD = 0.017453292519943295; // pi/180
   const RAD_TO_DEG = 57.29577951308232;    // 180/pi
 
-  const _default = {
+  const _default = _BR.default = {
     directionType: 1,
     maxDistance: 6,
     startOffset: 0,
@@ -118,7 +126,7 @@
     },
   };
 
-  const cast = (startPosition, direction, directionType, maxDistance, startOffset, cellSize) => {
+  _BR.cast = (startPosition, direction, directionType, maxDistance, startOffset, cellSize) => {
     // resolve arguments (defaults)
     let fromDirType = directionType | 0;
     if ((fromDirType < 1) | (fromDirType > 3)) {
@@ -170,9 +178,12 @@
     const timeStrideZ = cell / (absDirZ + (absDirZ === 0));
 
     // starting voxel indexes
-    let voxelX = Math.floor(startX / cell);
-    let voxelY = Math.floor(startY / cell);
-    let voxelZ = Math.floor(startZ / cell);
+    let voxelX = startX / cell;
+    voxelX = (voxelX | 0) - (voxelX < (voxelX | 0)); // Math.floor(voxelX)
+    let voxelY = startY / cell;
+    voxelY = (voxelY | 0) - (voxelY < (voxelY | 0)); // Math.floor(voxelY)
+    let voxelZ = startZ / cell;
+    voxelZ = (voxelZ | 0) - (voxelZ < (voxelZ | 0)); // Math.floor(voxelZ)
 
     // initial time to hit first voxel boundary on each axis
     let timeNextX = INFINITY;
@@ -235,13 +246,13 @@
       adjacent: [voxelX + normalX, voxelY + normalY, voxelZ + normalZ],
       point: [startX + dirX * timeHit, startY + dirY * timeHit, startZ + dirZ * timeHit],
       distance: timeHit + offsetDistance, // distance from original startPosition
-      offset: timeHit,            // distance from offset position
+      offset: timeHit, // distance from offset position
       steps: stepCount,
       inRange: inRange,
     };
   };
 
-  const offsetPosition = (startPosition, direction, directionType, startOffset) => {
+  _BR.offsetPosition = (startPosition, direction, directionType, startOffset) => {
     let fromDirType = directionType | 0;
     if ((fromDirType < 1) | (fromDirType > 3)) {
       fromDirType = _default.directionType;
@@ -264,7 +275,7 @@
     ];
   };
 
-  const maxDistancePosition = (startPosition, direction, directionType, maxDistance, startOffset) => {
+  _BR.maxDistancePosition = (startPosition, direction, directionType, maxDistance, startOffset) => {
     let fromDirType = directionType | 0;
     if ((fromDirType < 1) | (fromDirType > 3)) {
       fromDirType = _default.directionType;
@@ -293,7 +304,7 @@
     ];
   };
 
-  const convertDirection = (direction, fromType, toType) => {
+  _BR.convertDirection = (direction, fromType, toType) => {
     let fromDirType = fromType | 0;
     if ((fromDirType < 1) | (fromDirType > 3)) {
       fromDirType = _default.directionType;
@@ -317,13 +328,8 @@
     }
   };
 
-  globalThis.BR = Object.seal({
-    default: _default,
-    cast,
-    convertDirection,
-    offsetPosition,
-    maxDistancePosition,
-  });
+  Object.seal(_BR);
+  globalThis.BR = _BR;
 
   void 0;
 }

@@ -3,15 +3,22 @@
 // Licensed under the Apache License, Version 2.0.
 
 {
-  let X=null,
+  let _BR={
+    default:null,
+    cast:null,
+    convertDirection:null,
+    offsetPosition:null,
+    maxDistancePosition:null
+  },
+  X=null,
   Y=null,
-  Z=null;
-  const I=1e9,
+  Z=null,
+  I=1e9,
   P=3.141592653589793,
   W=6.283185307179586,
   R=0.017453292519943295,
   G=57.29577951308232,
-  U={
+  U=_BR.default={
     directionType:1,
     maxDistance:6,
     startOffset:0,
@@ -77,7 +84,7 @@
       X-=180
     }
   };
-  const cast=(S,D,T,M,O,L)=>{
+  _BR.cast=(S,D,T,M,O,L)=>{
     let a=T|0;
     if(a<1|a>3){
       a=U.directionType
@@ -113,10 +120,13 @@
     q=d/(n+(n===0)),
     r=d/(o+(o===0)),
     s=d/(p+(p===0)),
-    t=Math.floor(h/d),
-    u=Math.floor(i/d),
-    c=Math.floor(j/d),
-    w=I;
+    t=h/d;
+    t=(t|0)-(t<(t|0));
+    let u=i/d;
+    u=(u|0)-(u<(u|0));
+    let c=j/d;
+    c=(c|0)-(c<(c|0));
+    let w=I;
     if(n!==0){
       w=((t+(k+1>>1))*d-h)/e
     }
@@ -165,7 +175,7 @@
       inRange:N
     }
   },
-  offsetPosition=(S,D,T,O)=>{
+  _BR.offsetPosition=(S,D,T,O)=>{
     let p=T|0;
     if(p<1|p>3){
       p=U.directionType
@@ -184,7 +194,7 @@
       S[2]+Z*o
     ]
   },
-  maxDistancePosition=(S,D,T,M,O)=>{
+  _BR.maxDistancePosition=(S,D,T,M,O)=>{
     let p=T|0;
     if(p<1|p>3){
       p=U.directionType
@@ -208,7 +218,7 @@
       S[2]+Z*t
     ]
   },
-  convertDirection=(D,A,B)=>{
+  _BR.convertDirection=(D,A,B)=>{
     let a=A|0;
     if(a<1|a>3){
       a=U.directionType
@@ -227,13 +237,8 @@
       return[X,Y]
     }
   };
-  globalThis.BR=Object.seal({
-    default:U,
-    cast,
-    convertDirection,
-    offsetPosition,
-    maxDistancePosition
-  });
+  Object.seal(_BR);
+  globalThis.BR=_BR;
   void 0
 }
 
