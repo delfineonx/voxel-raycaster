@@ -4,12 +4,27 @@
 
 {
   const _BR = {
-    default: null,
+    default: {
+      directionType: 1,
+      maxDistance: 6,
+      startOffset: 0,
+      cellSize: 1,
+
+      normalType: 1,
+      width: 1,
+      height: 1,
+      rotation: 0, // radians in [-pi, pi)
+      rotationType: 2,
+    },
     cast: null,
     convertDirection: null,
     offsetPosition: null,
     maxDistancePosition: null,
+    intersect: null,
+    makeRectangle: null,
   };
+
+  const _default = _BR.default;
 
   // shared direction registers
   // 1: [dirX, dirY, dirZ]
@@ -25,13 +40,6 @@
   const TWO_PI = 6.283185307179586;        // 2*pi
   const DEG_TO_RAD = 0.017453292519943295; // pi/180
   const RAD_TO_DEG = 57.29577951308232;    // 180/pi
-
-  const _default = _BR.default = {
-    directionType: 1,
-    maxDistance: 6,
-    startOffset: 0,
-    cellSize: 1,
-  };
 
   const _Converter = {
     // [dirX, dirY, dirZ] -> normalized (unit vector)
@@ -136,9 +144,9 @@
     if (!(maxDist > 0)) {
       maxDist = _default.maxDistance;
     }
-    let offsetDistance = startOffset; // distance (or time) along ray from startPosition
-    if ((offsetDistance === undefined) | (offsetDistance === null)) {
-      offsetDistance = _default.startOffset;
+    let offsetDist = startOffset; // distance (or time) along ray from startPosition
+    if (offsetDist == null) {
+      offsetDist = _default.startOffset;
     }
     let cell = cellSize;
     if (!(cell > 0)) {
@@ -153,15 +161,15 @@
     // convert input direction
     _Converter[fromDirType + "1"];
 
-    // local copies of shared registers (normalized direction vector)
+    // local copies of shared registers
     const dirX = _dirX;
     const dirY = _dirY;
     const dirZ = _dirZ;
 
-    // starting point on ray (offset included)
-    const startX = startPosition[0] + dirX * offsetDistance;
-    const startY = startPosition[1] + dirY * offsetDistance;
-    const startZ = startPosition[2] + dirZ * offsetDistance;
+    // ray starting point (offset included)
+    const startX = startPosition[0] + dirX * offsetDist;
+    const startY = startPosition[1] + dirY * offsetDist;
+    const startZ = startPosition[2] + dirZ * offsetDist;
 
     // step directions per axis
     const stepXSign = (dirX > 0) - (dirX < 0);
@@ -245,8 +253,8 @@
       normal: [normalX, normalY, normalZ],
       adjacent: [voxelX + normalX, voxelY + normalY, voxelZ + normalZ],
       point: [startX + dirX * timeHit, startY + dirY * timeHit, startZ + dirZ * timeHit],
-      distance: timeHit + offsetDistance, // distance from original startPosition
-      offset: timeHit, // distance from offset position
+      distance: timeHit + offsetDist, // from original startPosition
+      offset: timeHit, // from offset position
       steps: stepCount,
       inRange: inRange,
     };
@@ -257,9 +265,9 @@
     if ((fromDirType < 1) | (fromDirType > 3)) {
       fromDirType = _default.directionType;
     }
-    let offsetDistance = startOffset;
-    if ((offsetDistance === undefined) | (offsetDistance === null)) {
-      offsetDistance = _default.startOffset;
+    let offsetDist = startOffset;
+    if (offsetDist == null) {
+      offsetDist = _default.startOffset;
     }
 
     _dirX = direction[0];
@@ -269,9 +277,9 @@
     _Converter[fromDirType + "1"];
 
     return [
-      startPosition[0] + _dirX * offsetDistance,
-      startPosition[1] + _dirY * offsetDistance,
-      startPosition[2] + _dirZ * offsetDistance,
+      startPosition[0] + _dirX * offsetDist,
+      startPosition[1] + _dirY * offsetDist,
+      startPosition[2] + _dirZ * offsetDist,
     ];
   };
 
@@ -284,9 +292,9 @@
     if (!(maxDist > 0)) {
       maxDist = _default.maxDistance;
     }
-    let offsetDistance = startOffset;
-    if ((offsetDistance === undefined) | (offsetDistance === null)) {
-      offsetDistance = _default.startOffset;
+    let offsetDist = startOffset;
+    if (offsetDist == null) {
+      offsetDist = _default.startOffset;
     }
 
     _dirX = direction[0];
@@ -295,7 +303,7 @@
 
     _Converter[fromDirType + "1"];
 
-    const maxTime = maxDist + offsetDistance;
+    const maxTime = maxDist + offsetDist;
 
     return [
       startPosition[0] + _dirX * maxTime,
@@ -328,9 +336,246 @@
     }
   };
 
+  _BR.intersect = (startPosition, targetRectangle, direction, directionType, maxDistance, startOffset) => {
+    // resolve arguments (defaults)
+    let fromDirType = directionType | 0;
+    if ((fromDirType < 1) | (fromDirType > 3)) {
+      fromDirType = _default.directionType;
+    }
+    let maxDist = maxDistance;
+    if (!(maxDist > 0)) {
+      maxDist = _default.maxDistance;
+    }
+    let offsetDist = startOffset;
+    if (offsetDist == null) {
+      offsetDist = _default.startOffset;
+    }
+
+    // load into shared registers
+    _dirX = direction[0];
+    _dirY = direction[1];
+    _dirZ = direction[2];
+
+    // convert input direction
+    _Converter[fromDirType + "1"];
+
+    // local copies of shared registers
+    const dirX = _dirX;
+    const dirY = _dirY;
+    const dirZ = _dirZ;
+
+    // ray starting point (offset included)
+    const startX = startPosition[0] + dirX * offsetDist;
+    const startY = startPosition[1] + dirY * offsetDist;
+    const startZ = startPosition[2] + dirZ * offsetDist;
+
+    // partially unpack rectangle 
+    const originX = targetRectangle[0];
+    const originY = targetRectangle[1];
+    const originZ = targetRectangle[2];
+
+    // cached unit normal
+    let normalX = targetRectangle[9];
+    let normalY = targetRectangle[10];
+    let normalZ = targetRectangle[11];
+
+    // denom = dot(direction, planeNormal)
+    const denom = dirX * normalX + dirY * normalY + dirZ * normalZ;
+
+    // "almost parallel" check
+    // since normal is unit, denom is cos(angle)
+    if (denom * denom <= 1e-24) {
+      return {
+        hit: false,
+        inRange: false,
+        point: null,
+        normal: null,
+        uv: null,
+        distance: INFINITY,
+        offset: INFINITY,
+      };
+    }
+
+    // planeTime = dot(origin - start, normal) / denom
+    const planeTime = ((originX - startX) * normalX + (originY - startY) * normalY + (originZ - startZ) * normalZ) / denom;
+
+    // for ray-distance units
+    const timeEpsilon = maxDist * 1e-9 + 1e-9;
+
+    // behind the ray start
+    if (planeTime < -timeEpsilon) {
+      return {
+        hit: false,
+        inRange: false,
+        point: null,
+        normal: null,
+        uv: null,
+        distance: INFINITY,
+        offset: planeTime,
+      };
+    }
+
+    // beyond max distance
+    if (planeTime > (maxDist + timeEpsilon)) {
+      return {
+        hit: false,
+        inRange: false,
+        point: null,
+        normal: null,
+        uv: null,
+        distance: planeTime + offsetDist,
+        offset: planeTime,
+      };
+    }
+
+    // hit point on the plane
+    const pointX = startX + dirX * planeTime;
+    const pointY = startY + dirY * planeTime;
+    const pointZ = startZ + dirZ * planeTime;
+
+    // w = point - origin
+    const wX = pointX - originX;
+    const wY = pointY - originY;
+    const wZ = pointZ - originZ;
+
+    // rectangle was built by `BR.makeRect()`: U ⟂ V
+    // u = dot(w, U) / dot(U,U)
+    // v = dot(w, V) / dot(V,V)
+    const rectU = (wX * targetRectangle[3] + wY * targetRectangle[4] + wZ * targetRectangle[5]) * targetRectangle[12];
+    const rectV = (wX * targetRectangle[6] + wY * targetRectangle[7] + wZ * targetRectangle[8]) * targetRectangle[13];
+
+    // for UV bounds
+    const uvEpsilon = 1e-9;
+
+    const isInRect = (rectU >= -uvEpsilon) && (rectU <= (1 + uvEpsilon)) && (rectV >= -uvEpsilon) && (rectV <= (1 + uvEpsilon));
+
+    if (!isInRect) {
+      return {
+        hit: false,
+        inRange: true,
+        point: [pointX, pointY, pointZ],
+        normal: null,
+        uv: [rectU, rectV],
+        distance: planeTime + offsetDist,
+        offset: planeTime,
+      };
+    }
+
+    // flip normal to face against the ray direction
+    if (denom > 0) {
+      normalX = -normalX;
+      normalY = -normalY;
+      normalZ = -normalZ;
+    }
+
+    return {
+      hit: true,
+      inRange: true,
+      point: [pointX, pointY, pointZ],
+      normal: [normalX, normalY, normalZ],
+      uv: [rectU, rectV], // u,v in [0..1]
+      distance: planeTime + offsetDist, // from original startPosition
+      offset: planeTime, // from offset position
+    };
+  };
+
+  _BR.makeRectangle = (centerPosition, normal, normalType, width, height, rotation, rotationType) => {
+    // resolve arguments (defaults)
+    let fromNormalType = normalType | 0;
+    if ((fromNormalType < 1) | (fromNormalType > 3)) {
+      fromNormalType = _default.normalType;
+    }
+    let rectWidth = width;
+    if (!(rectWidth > 0)) {
+      rectWidth = _default.width;
+    }
+    let rectHeight = height;
+    if (!(rectHeight > 0)) {
+      rectHeight = _default.height;
+    }
+    let fromRotationType = rotationType | 0;
+    if ((fromRotationType !== 2) & (fromRotationType !== 3)) {
+      fromRotationType = _default.rotationType;
+    }
+
+    // normalize rotation into a stable range to avoid huge angles
+    let rectRotation = rotation;
+    if (rectRotation == null) {
+      rectRotation = _default.rotation;
+    } else if (fromRotationType === 3) {
+      // degrees -> normalize to [-180, 180) then convert to radians
+      rectRotation = (rectRotation + 180) % 360;
+      if (rectRotation < 0) { rectRotation += 360; }
+      rectRotation = (rectRotation - 180) * DEG_TO_RAD;
+    } else {
+      // radians -> normalize to [-pi, pi)
+      rectRotation = (rectRotation + PI) % TWO_PI;
+      if (rectRotation < 0) { rectRotation += TWO_PI; }
+      rectRotation = rectRotation - PI;
+    }
+
+    // load into shared registers
+    _dirX = normal[0];
+    _dirY = normal[1];
+    _dirZ = normal[2];
+
+    // convert input normal direction
+    _Converter[fromNormalType + "1"];
+
+    // local copies of shared registers
+    const normalX = _dirX;
+    const normalY = _dirY;
+    const normalZ = _dirZ;
+
+    const cosRotation = Math.cos(rectRotation);
+    const sinRotation = Math.sin(rectRotation);
+
+    // helper axes keep cross products from going near-zero
+    let axisX = 0, axisY = 0, axisZ = 0;
+    if ((normalX < 0.9) & (normalX > -0.9)) {
+      axisX = 1;
+    } else {
+      axisY = 1;
+    }
+
+    // basisU = normalize(axis x normal)
+    let basisUX = axisY * normalZ - axisZ * normalY;
+    let basisUY = axisZ * normalX - axisX * normalZ;
+    let basisUZ = axisX * normalY - axisY * normalX;
+
+    const inverseBasisUNorm = 1 / (Math.sqrt(basisUX * basisUX + basisUY * basisUY + basisUZ * basisUZ) || 1);
+    basisUX *= inverseBasisUNorm;
+    basisUY *= inverseBasisUNorm;
+    basisUZ *= inverseBasisUNorm;
+
+    // basisV = (unitNormal x basisU)
+    // (right-handed)
+    const basisVX = normalY * basisUZ - normalZ * basisUY;
+    const basisVY = normalZ * basisUX - normalX * basisUZ;
+    const basisVZ = normalX * basisUY - normalY * basisUX;
+
+    // edge vectors
+    const edgeUX = (basisUX * cosRotation + basisVX * sinRotation) * rectWidth;
+    const edgeUY = (basisUY * cosRotation + basisVY * sinRotation) * rectWidth;
+    const edgeUZ = (basisUZ * cosRotation + basisVZ * sinRotation) * rectWidth;
+
+    const edgeVX = (-basisUX * sinRotation + basisVX * cosRotation) * rectHeight;
+    const edgeVY = (-basisUY * sinRotation + basisVY * cosRotation) * rectHeight;
+    const edgeVZ = (-basisUZ * sinRotation + basisVZ * cosRotation) * rectHeight;
+
+    return [
+      centerPosition[0] - 0.5 * edgeUX - 0.5 * edgeVX, 
+      centerPosition[1] - 0.5 * edgeUY - 0.5 * edgeVY, 
+      centerPosition[2] - 0.5 * edgeUZ - 0.5 * edgeVZ,
+      edgeUX, edgeUY, edgeUZ,
+      edgeVX, edgeVY, edgeVZ,
+      normalX, normalY, normalZ,
+      1 / (rectWidth * rectWidth), 1 / (rectHeight * rectHeight),
+    ];
+  };
+
   Object.seal(_BR);
   globalThis.BR = _BR;
 
   void 0;
 }
-
